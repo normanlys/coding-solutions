@@ -1,0 +1,1 @@
+UPDATE salary SET sex = 'm' WHERE sex = 'f' AND sex = '';
