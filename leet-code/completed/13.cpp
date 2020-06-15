@@ -23,16 +23,8 @@ public:
         {
             int currentCharValue = romanValueMap[s[i]];
             int nextCharValue = romanValueMap[s[i+1]];
-            if (currentCharValue < nextCharValue)
-            {
-                sum -= currentCharValue;
-            }
-            else
-            {
-                sum += currentCharValue;
-            }
+            sum += currentCharValue < nextCharValue ? -currentCharValue : currentCharValue;
         }
-
         return sum;
     }
 };
