@@ -1,14 +1,14 @@
 #include <string>
 #include <iostream>
 #include <vector>
-#include <map>
+#include <unordered_map>
 
 using namespace std;
 
 class Solution {
 public:
     int romanToInt(string s) {
-        map<char, int> romanValueMap = {
+        unordered_map<char, int> romanValueMap = {
             {'I', 1},
             {'V', 5},
             {'X', 10},
@@ -18,7 +18,7 @@ public:
             {'M', 1000},
         };
 
-        int sum = 0;
+        int sum = romanValueMap[s.back()];
         for (int i = 0; i < s.length() - 1; i++)
         {
             int currentCharValue = romanValueMap[s[i]];
@@ -33,7 +33,7 @@ public:
             }
         }
 
-        return sum + romanValueMap[s[s.length()-1]];
+        return sum;
     }
 };
 
