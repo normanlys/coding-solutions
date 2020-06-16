@@ -18,8 +18,12 @@ public:
 
         while (head)
         {
+            // use tmp var to store the next list
             ListNode *next = head->next;
+            // only preserve the first node and attach the previously reversed list
+            // to its next
             head->next = previous;
+            // store the reversed list in previous
             previous = head;
             head = next;
         }
@@ -33,7 +37,8 @@ public:
             return head;
         
         ListNode* reversedNext = reverseListRecursively(head->next);
-        
+        // utilises pointers
+        // head->next is the tail of reversedNext because of pointers
         head->next->next = head;
         head->next = nullptr;
         return reversedNext;
