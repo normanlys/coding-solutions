@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <fstream>
+#include <map>
 
 using namespace std;
 
@@ -16,50 +18,83 @@ void Print(const string& message)
 
 void Print(const vector<int>& arr)
 {
-    for (auto n : arr)
-        cout << n << endl;
+    for (int n : arr)
+        cout << n << ", ";
+    cout << "\n";
 }
 
-int GetPivotIndex1(vector<int>& arr, const int& start, const int& length)
+int GetPivotIndex(vector<int>& arr, const int& low, const int& high)
 {
-    return start;
+    int midIndex = (high+low)/2;
+    int first = arr[low];
+    int mid = arr[midIndex];
+    int last =  arr[high];
+
+    vector<int> pivots = {first, mid, last};
+    sort(pivots.begin(), pivots.end());
+    
+    const int pivot = pivots[1];
+    if (pivot == first)
+        return low;
+    else if (pivot == mid)
+        return midIndex;
+    else
+        return high;
 }
 
-void QuickSort(vector<int>& arr, const int& start, const int& length)
+void QuickSort(vector<int>& arr, const int& low, const int& high, int& comparisons)
 {
-    if (length < 2)
+    if (high <= low)
         return;
 
-    int pivotIndex = GetPivotIndex1(arr, start, length);
-    int pivot = arr[pivotIndex];
-    swap(arr[start], arr[pivotIndex]);
+    comparisons += high - low;
 
-    int i = start;
-    int j = start;
-    for (int k = start + 1; k < length; k++)
+    const int pivotIndex = GetPivotIndex(arr, low, high);
+    const int pivot = arr[pivotIndex];
+    swap(arr[low], arr[pivotIndex]);
+
+    int i = low;
+    int j = low;
+    for (int k = low + 1; k <= high; k++)
     {
         if (arr[k] < pivot)
         {
-            swap(arr[k], arr[i+1]);
+            swap(arr[k], arr[i+1]); 
             i++;
         }
         j++;
     }
-    swap(arr[pivotIndex], arr[i]);
-    cout << "pivotIndex " << pivotIndex << " i " << i << endl;
 
-    QuickSort(arr, start, pivot - start);
-    QuickSort(arr, pivot + 1, length - start - 1);
+    swap(arr[low], arr[i]);
+
+    QuickSort(arr, low, i - 1, comparisons);
+    QuickSort(arr, i + 1, high, comparisons);
 }
 
 int main(int argc, char const *argv[])
 {
-    Print("start");
-    vector<int> arr = {1, 4, 3};
-    QuickSort(arr, 0, arr.size());
+    ifstream file("quicksort.txt");
+    vector<int> arr = {};
+    int n;
+    while (file >> n)
+        arr.push_back(n);
+
+    // vector<int> arr = {3, 6, 1};
+
+    vector<int> sortedArr = arr;
+    sort(sortedArr.begin(), sortedArr.end());
+    int comparisons = 0;
+    QuickSort(arr, 0, arr.size()-1, comparisons);
     
-    Print("Sorted");
+    for (int i = 0; i < arr.size(); i++)
+    {
+        if (arr[i] != sortedArr[i])
+            throw;
+    }
     
     Print(arr);
+    Print(comparisons);
+
+
     return 0;
 }
